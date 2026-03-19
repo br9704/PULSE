@@ -3,7 +3,7 @@
 > Status key: [ ] Not started | [x] Complete | [~] In progress | [⏭️] Deferred
 
 ## Project Status
-**Current state:** Sprint 0, 1, and 2 complete. Full database schema deployed to Supabase, UoM Parkville seeded with 5 buildings, 13 floor zones, and 335 google_popular_times rows. Both Edge Functions deployed. Blending logic implemented with full test coverage (20 tests). Ready for Sprint 3.
+**Current state:** Sprints 0–3 complete. Full-viewport Mapbox map rendering 5 UoM building polygons from Supabase. Buildings hook, GeoJSON conversion, click handler, GPS dot, labels all working. 24 unit tests passing. Ready for Sprint 4.
 
 ---
 
@@ -148,17 +148,17 @@
 - User location dot (blue pulse) if GPS granted
 
 **Subtasks:**
-- [ ] S3.1 — Create src/components/Map.tsx with Mapbox GL JS initialisation
-- [ ] S3.2 — Create src/hooks/useBuildings.ts — fetch buildings + zones from Supabase
-- [ ] S3.3 — Convert building polygons to GeoJSON FeatureCollection for Mapbox source
-- [ ] S3.4 — Add fill layer with default colour (grey/border colour — no occupancy data yet)
-- [ ] S3.5 — Add stroke layer for building outlines
-- [ ] S3.6 — Add symbol layer for building name labels (short_name, zoom threshold)
-- [ ] S3.7 — Add user location control (GeolocateControl)
-- [ ] S3.8 — Set map bounds, min/max zoom from constants
-- [ ] S3.9 — Handle click on building polygon — emit selected building ID
-- [ ] S3.10 — Create src/pages/MapPage.tsx as the home route shell
-- [ ] S3.11 — Verify map renders on mobile viewport (375px)
+- [x] S3.1 — Create src/components/Map.tsx with Mapbox GL JS initialisation ✅
+- [x] S3.2 — Create src/hooks/useBuildings.ts — fetch buildings from Supabase ✅
+- [x] S3.3 — Convert building polygons to GeoJSON FeatureCollection ✅ (src/lib/mapHelpers.ts + 4 unit tests)
+- [x] S3.4 — Add fill layer with default colour (grey #1A3A5C, 800ms transition prep) ✅
+- [x] S3.5 — Add stroke layer for building outlines ✅
+- [x] S3.6 — Add symbol layer for building name labels (short_name, zoom >= 15.5) ✅
+- [x] S3.7 — Add user location control (GeolocateControl with heading) ✅
+- [x] S3.8 — Set map bounds, min/max zoom from constants ✅
+- [x] S3.9 — Handle click on building polygon — emit selected building ID ✅
+- [x] S3.10 — Create src/pages/MapPage.tsx as the home route shell ✅
+- [x] S3.11 — Verify map renders on mobile viewport (375px) ✅ (full viewport h-full w-full, no chrome)
 
 **Test criteria:**
 - Map fills viewport on mobile and desktop

@@ -238,7 +238,7 @@ All tables have **Row Level Security** enabled. Anonymous users can read; only t
 - [x] **Sprint 2:** Google Places integration and occupancy blending logic
 
 ### Phase 1 — MVP
-- [ ] **Sprint 3:** Mapbox map with building polygons
+- [x] **Sprint 3:** Mapbox map with building polygons
 - [ ] **Sprint 4:** Realtime geolocation broadcasting
 - [ ] **Sprint 5:** Zone aggregation Edge Function
 - [ ] **Sprint 6:** Occupancy blending (live + Google + predicted)
