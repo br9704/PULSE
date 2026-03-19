@@ -3,7 +3,7 @@
 > Status key: [ ] Not started | [x] Complete | [~] In progress | [⏭️] Deferred
 
 ## Project Status
-**Current state:** Sprints 0–4 complete. Client-side zone detection via Turf.js, anonymous position broadcasting to Edge Function, rotating session IDs (30-min), visibility-aware GPS lifecycle. 34 unit tests passing. Ready for Sprint 5.
+**Current state:** Sprints 0–5 complete. Full data pipeline: GPS → zone detection → broadcast → Edge Function aggregation → zone_occupancy upsert. History throttled to 15-min snapshots. data_quality tracks live/stale/none. 57 unit tests passing. Ready for Sprint 6.
 
 ---
 
@@ -224,15 +224,15 @@
 - Writes 15-minute snapshots to occupancy_history
 
 **Subtasks:**
-- [ ] S5.1 — Implement complete aggregate-occupancy Edge Function
-- [ ] S5.2 — In-memory session tracking (Map<zone_id, Set<session_id>>)
-- [ ] S5.3 — Position expiry logic (remove entries older than 30 minutes)
-- [ ] S5.4 — Trend calculation (compare current vs previous pct: filling/emptying/stable)
-- [ ] S5.5 — Upsert zone_occupancy with computed values
-- [ ] S5.6 — Write 15-minute snapshot to occupancy_history
-- [ ] S5.7 — Add data_quality field logic ('live' when active sessions exist, 'stale' when data > 60s old)
-- [ ] S5.8 — Verify session_id is NEVER written to any database table
-- [ ] S5.9 — Write Deno tests for aggregation logic
+- [x] S5.1 — Implement complete aggregate-occupancy Edge Function ✅ (v2 deployed)
+- [x] S5.2 — In-memory session tracking (Map<zone_id, Map<session_id, timestamp>>) ✅
+- [x] S5.3 — Position expiry logic (30-min expiry) ✅
+- [x] S5.4 — Trend calculation (±5% threshold: filling/emptying/stable) ✅
+- [x] S5.5 — Upsert zone_occupancy with computed values ✅
+- [x] S5.6 — Write 15-minute snapshots to occupancy_history ✅ (throttled via module-scoped timestamp)
+- [x] S5.7 — data_quality: 'live' (<60s), 'stale' (>60s), 'none' (no sessions) ✅
+- [x] S5.8 — Verify session_id NEVER in any DB write ✅ (grep confirmed, privacy audit passed)
+- [x] S5.9 — Unit tests for aggregation logic ✅ (23 tests: data quality, expiry, occupancy pct, trend, recordPosition)
 
 **Test criteria:**
 - Edge Function runs without errors
