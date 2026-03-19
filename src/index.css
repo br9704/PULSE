@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* UoM Brand */
+  --color-uom-navy: #003865;
+  --color-uom-blue: #0080A4;
+  --color-uom-gold: #C8A951;
+  --color-uom-gold-light: #E8C97A;
+
+  /* Backgrounds */
+  --color-bg-primary: #030D1A;
+  --color-bg-secondary: #071828;
+  --color-bg-elevated: #0D2340;
+  --color-bg-overlay: rgba(3,13,26,0.85);
+  --color-border: #1A3A5C;
+  --color-border-bright: #2A5A8C;
+
+  /* Text */
+  --color-text-primary: #F0F4F8;
+  --color-text-secondary: #8AAEC8;
+  --color-text-tertiary: #4A7090;
+  --color-text-accent: #C8A951;
+
+  /* Occupancy scale */
+  --color-empty: #4CAF7D;
+  --color-quiet: #A8C44E;
+  --color-moderate: #F5A623;
+  --color-busy: #E87040;
+  --color-packed: #E05252;
+
+  /* Data source indicators */
+  --color-source-live: #4CAF7D;
+  --color-source-google: #0080A4;
+  --color-source-predicted: #C8A951;
+  --color-source-stale: #4A7090;
+
+  /* Spacing (8pt grid) */
+  --space-1: 4px;  --space-2: 8px;  --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-12: 48px;
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-card: 0 4px 24px rgba(0,0,0,0.4), 0 1px 4px rgba(0,56,101,0.3);
+  --shadow-elevated: 0 8px 40px rgba(0,0,0,0.6), 0 2px 8px rgba(0,56,101,0.2);
+  --glow-gold: 0 0 20px rgba(200,169,81,0.3);
+  --glow-live: 0 0 12px rgba(76,175,125,0.4);
+
+  /* Typography */
+  --font-display: 'Neue Haas Grotesk Display', 'Helvetica Neue', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --text-xs: 0.6875rem;
+  --text-sm: 0.8125rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.75rem;
+  --text-4xl: 3rem;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
