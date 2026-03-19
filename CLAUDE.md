@@ -105,6 +105,7 @@ supabase/
 - Each commit should be atomic — one logical change
 - Reference the sprint task in the commit message when relevant: `feat(S3.2): implement zone aggregation Edge Function`
 - **Commit and push after every completed sprint.** Do not move to the next sprint without committing and pushing the current one.
+- **Update documentation before committing a sprint.** Before each sprint commit, update `README.md` (roadmap checkboxes, current status, any new setup steps or env vars) and `MASTERPLAN.md` (task checkmarks). Documentation must reflect the actual state of the project at every commit.
 
 ---
 
