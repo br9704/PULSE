@@ -200,16 +200,34 @@ Never silently make a product decision. Log it.
 
 ## 10. Definition of Done (Per Sprint)
 
-A sprint is done when:
+A sprint is done when **all** of the following are complete, **in this order:**
 
+### Step 1: Code complete
 - [ ] All code changes are committed with conventional commit messages
 - [ ] All new functions and hooks have TypeScript types
 - [ ] All new utility logic has unit tests (and tests pass)
-- [ ] No TypeScript errors (`pnpm tsc --noEmit` passes)
-- [ ] No ESLint errors (`pnpm lint` passes)
-- [ ] The feature is manually verifiable (you can describe the steps to test it)
+
+### Step 2: Audit (run BEFORE updating docs)
+- [ ] Run a full codebase audit (spawn an audit agent or perform manually):
+  - `pnpm exec tsc -b` — zero TypeScript errors
+  - `pnpm test` — all unit tests pass
+  - `pnpm lint` — no ESLint errors
+  - Check for files exceeding 150 lines (components only, not test/type files)
+  - Check for `any` types without justification
+  - Check for hardcoded secrets or API keys
+  - Check for privacy violations (session_id stored, raw GPS leaving client)
+  - Check for DB/TypeScript type mismatches (CHECK constraints vs union types)
+  - Check for missing Zod validation on external data
+- [ ] Fix any issues found by the audit before proceeding
+
+### Step 3: Documentation update
 - [ ] `MASTERPLAN.md` is updated with ✅ checkmarks for completed tasks
-- [ ] Any new environment variables are documented in README
+- [ ] `README.md` roadmap checkboxes updated, any new setup steps or env vars added
+- [ ] Any new environment variables are documented in `.env.example`
+- [ ] The feature is manually verifiable (you can describe the steps to test it)
+
+### Step 4: Commit and push
+- [ ] All changes (code + audit fixes + docs) committed and pushed to GitHub
 
 ---
 
