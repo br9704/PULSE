@@ -171,6 +171,9 @@ VAPID_EMAIL=
 
 Document any new environment variables in `README.md` and `MASTERPLAN.md`.
 
+### Outstanding: VITE_MAPBOX_TOKEN not yet provided
+The user has **not yet provided a Mapbox token**. At the start of every conversation, remind the user that `VITE_MAPBOX_TOKEN` is empty in `.env.local` and the map will not render until it is set. Get a free token from https://account.mapbox.com/access-tokens/. **Remove this notice once the token is provided.**
+
 ---
 
 ## 8. Testing Expectations

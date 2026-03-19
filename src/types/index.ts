@@ -65,7 +65,7 @@ export interface BuildingZone {
 
 // ── Occupancy ──────────────────────────────────────────────────────
 
-export type DataQuality = 'live' | 'google' | 'predicted' | 'none'
+export type DataQuality = 'live' | 'google' | 'predicted' | 'stale' | 'none'
 export type OccupancyTrend = 'filling' | 'emptying' | 'stable'
 export type PredictionConfidence = 'high' | 'medium' | 'low' | 'google-estimated'
 export type PredictionSource = 'pulse' | 'google'

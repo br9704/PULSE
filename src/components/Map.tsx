@@ -86,47 +86,21 @@ export default function Map({ buildings, onBuildingClick }: MapProps) {
 
     map.addSource(BUILDINGS_SOURCE, { type: 'geojson', data: geojson })
 
-    // Fill layer — grey for Sprint 3, colour-driven in Sprint 7
-    map.addLayer({
-      id: FILL_LAYER,
-      type: 'fill',
-      source: BUILDINGS_SOURCE,
-      paint: {
-        'fill-color': '#1A3A5C',
-        'fill-opacity': 0.6,
-        'fill-color-transition': { duration: 800, delay: 0 },
-      },
-    })
+    // Fill — grey for now, colour-driven in Sprint 7 (800ms transition ready)
+    map.addLayer({ id: FILL_LAYER, type: 'fill', source: BUILDINGS_SOURCE, paint: {
+      'fill-color': '#1A3A5C', 'fill-opacity': 0.6, 'fill-color-transition': { duration: 800, delay: 0 },
+    }})
 
-    // Stroke layer
-    map.addLayer({
-      id: OUTLINE_LAYER,
-      type: 'line',
-      source: BUILDINGS_SOURCE,
-      paint: {
-        'line-color': '#2A5A8C',
-        'line-width': 1.5,
-      },
-    })
+    // Stroke
+    map.addLayer({ id: OUTLINE_LAYER, type: 'line', source: BUILDINGS_SOURCE, paint: {
+      'line-color': '#2A5A8C', 'line-width': 1.5,
+    }})
 
-    // Label layer — visible at zoom >= 15.5
-    map.addLayer({
-      id: LABEL_LAYER,
-      type: 'symbol',
-      source: BUILDINGS_SOURCE,
-      minzoom: LABEL_VISIBLE_ZOOM,
-      layout: {
-        'text-field': ['get', 'shortName'],
-        'text-size': 11,
-        'text-font': ['DIN Pro Medium', 'Arial Unicode MS Regular'],
-        'text-anchor': 'center',
-        'text-allow-overlap': false,
-      },
-      paint: {
-        'text-color': '#8AAEC8',
-        'text-halo-color': '#030D1A',
-        'text-halo-width': 1,
-      },
+    // Labels — visible at zoom >= 15.5
+    map.addLayer({ id: LABEL_LAYER, type: 'symbol', source: BUILDINGS_SOURCE, minzoom: LABEL_VISIBLE_ZOOM,
+      layout: { 'text-field': ['get', 'shortName'], 'text-size': 11,
+        'text-font': ['DIN Pro Medium', 'Arial Unicode MS Regular'], 'text-anchor': 'center', 'text-allow-overlap': false },
+      paint: { 'text-color': '#8AAEC8', 'text-halo-color': '#030D1A', 'text-halo-width': 1 },
     })
   }, [])
 
