@@ -3,7 +3,7 @@
 > Status key: [ ] Not started | [x] Complete | [~] In progress | [⏭️] Deferred
 
 ## Project Status
-**Current state:** Sprints 0–3 complete. Full-viewport Mapbox map rendering 5 UoM building polygons from Supabase. Buildings hook, GeoJSON conversion, click handler, GPS dot, labels all working. 24 unit tests passing. Ready for Sprint 4.
+**Current state:** Sprints 0–4 complete. Client-side zone detection via Turf.js, anonymous position broadcasting to Edge Function, rotating session IDs (30-min), visibility-aware GPS lifecycle. 34 unit tests passing. Ready for Sprint 5.
 
 ---
 
@@ -188,14 +188,14 @@
 - Broadcasting only when app is in foreground and GPS is active
 
 **Subtasks:**
-- [ ] S4.1 — Create src/hooks/useZoneDetection.ts — Turf.js point-in-polygon against zone polygons
-- [ ] S4.2 — Create src/lib/sessionId.ts — rotating anonymous UUID (30-min rotation)
-- [ ] S4.3 — Create src/hooks/usePositionBroadcast.ts — broadcast to Supabase Realtime channel
-- [ ] S4.4 — Subscribe to Geolocation API with watchPosition
-- [ ] S4.5 — Implement broadcast throttling (no more than once per 10 seconds)
-- [ ] S4.6 — Handle edge cases: user outside any zone, GPS lost, app backgrounded
-- [ ] S4.7 — Write unit tests for zone detection logic
-- [ ] S4.8 — Write unit tests for session rotation
+- [x] S4.1 — Create src/lib/zoneDetection.ts — Turf.js point-in-polygon (pure function privacy firewall) ✅
+- [x] S4.2 — Create src/lib/sessionId.ts — rotating anonymous UUID (30-min, module-scoped) ✅
+- [x] S4.3 — Create src/hooks/usePositionBroadcast.ts — HTTP POST to Edge Function (zone_id only) ✅
+- [x] S4.4 — Subscribe to Geolocation API with watchPosition (+ useZones hook) ✅
+- [x] S4.5 — Implement broadcast throttling (10s interval, ref-based) ✅
+- [x] S4.6 — Handle edge cases: outside zones, GPS denied/lost, app backgrounded (visibilitychange) ✅
+- [x] S4.7 — Write unit tests for zone detection logic ✅ (5 tests including coordinate order regression)
+- [x] S4.8 — Write unit tests for session rotation ✅ (5 tests)
 
 **Test criteria:**
 - Zone detection correctly identifies which building zone a coordinate falls in

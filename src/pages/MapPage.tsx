@@ -1,10 +1,29 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import Map from '@/components/Map'
 import { useBuildings } from '@/hooks/useBuildings'
+import { useZones } from '@/hooks/useZones'
+import { useGeolocation } from '@/hooks/useGeolocation'
+import { usePositionBroadcast } from '@/hooks/usePositionBroadcast'
+import { detectZone } from '@/lib/zoneDetection'
 
 export default function MapPage() {
   const { buildings, error } = useBuildings()
+  const { zones } = useZones()
+  const { position, isWatching } = useGeolocation()
   const [_selectedBuildingId, setSelectedBuildingId] = useState<string | null>(null)
+
+  // Zone detection — coordinates consumed here, only zone_id exits
+  const zoneId = useMemo(
+    () => position && zones.length > 0 ? detectZone(position, zones) : null,
+    [position, zones],
+  )
+
+  // Broadcasting — receives ONLY zone_id, never coordinates
+  usePositionBroadcast({
+    zoneId,
+    campusSlug: 'unimelb',
+    enabled: isWatching && zones.length > 0,
+  })
 
   const handleBuildingClick = useCallback((id: string) => {
     setSelectedBuildingId(id)
