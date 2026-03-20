@@ -39,6 +39,7 @@ export default function HomePage() {
 
   return (
     <div className="h-full overflow-y-auto" style={{ backgroundColor: '#F0F2F5' }}>
+    <div style={{ maxWidth: 480, margin: '0 auto' }}>
 
       {/* ── Header ── */}
       <div style={{ background: 'linear-gradient(145deg, #001F3F 0%, #003865 50%, #005A8C 100%)', padding: '56px 24px 40px' }}>
@@ -82,6 +83,7 @@ export default function HomePage() {
 
       {/* ── All Buildings ── */}
       <AllBuildingsSection sorted={sorted} navigate={navigate} />
+    </div>
     </div>
   )
 }
