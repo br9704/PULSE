@@ -9,7 +9,7 @@ const BUILDINGS_SOURCE = 'buildings'
 // Falls back to 'none' colour when occupancy_pct is absent
 const FILL_COLOR_EXPRESSION: ExpressionSpecification = [
   'case',
-  ['has', 'occupancy_pct'],
+  ['all', ['has', 'occupancy_pct'], ['!=', ['get', 'occupancy_pct'], null]],
   [
     'interpolate', ['linear'], ['get', 'occupancy_pct'],
     0, OCCUPANCY_COLOURS.empty,
@@ -54,38 +54,17 @@ export function getLabelLayerConfig(): SymbolLayerSpecification {
     source: BUILDINGS_SOURCE,
     minzoom: LABEL_VISIBLE_ZOOM,
     layout: {
-      'text-field': ['get', 'shortName'],
-      'text-size': 11,
-      'text-font': ['DIN Pro Medium', 'Arial Unicode MS Regular'],
-      'text-anchor': 'center',
-      'text-allow-overlap': false,
-    },
-    paint: {
-      'text-color': '#8AAEC8',
-      'text-halo-color': '#030D1A',
-      'text-halo-width': 1,
-    },
-  }
-}
-
-export function getOccupancyLabelLayerConfig(): SymbolLayerSpecification {
-  return {
-    id: 'building-occupancy-labels',
-    type: 'symbol',
-    source: BUILDINGS_SOURCE,
-    minzoom: LABEL_VISIBLE_ZOOM,
-    layout: {
+      // Combined: "Baillieu\n35%" or just "Baillieu" if no data
       'text-field': [
         'case',
-        ['has', 'occupancy_pct'],
-        ['concat', ['to-string', ['round', ['get', 'occupancy_pct']]], '%'],
-        '',
+        ['all', ['has', 'occupancy_pct'], ['!=', ['get', 'occupancy_pct'], null]],
+        ['concat', ['get', 'shortName'], '\n', ['to-string', ['round', ['get', 'occupancy_pct']]], '%'],
+        ['get', 'shortName'],
       ],
-      'text-size': 13,
-      'text-font': ['DIN Pro Bold', 'Arial Unicode MS Bold'],
+      'text-size': 12,
+      'text-font': ['DIN Pro Medium', 'Arial Unicode MS Regular'],
       'text-anchor': 'center',
-      'text-offset': [0, 1.2],
-      'text-allow-overlap': false,
+      'text-allow-overlap': true,
     },
     paint: {
       'text-color': '#F0F4F8',

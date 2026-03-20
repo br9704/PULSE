@@ -307,8 +307,10 @@
 - [x] S7.6 — StaleDataBanner component (amber warning, 60s threshold, hides for old seed data) ✅
 - [x] S7.7 — Labels update in real-time via GeoJSON source refresh ✅
   - [x] S7.extra — Expanded from 5 to 20 UoM buildings (OSM-sourced polygons)
-  - [x] S7.extra — Fixed all polygon positions using OpenStreetMap Overpass API data
-  - [ ] S7.extra — Seed google_popular_times for remaining 13 new buildings (7/20 seeded)
+  - [x] S7.extra — Fixed all polygon shapes using real OpenStreetMap outlines (up to 58 vertices)
+  - [x] S7.extra — Seeded google_popular_times for all 18 buildings (1,252 rows)
+  - [x] S7.extra — Removed Giblin Eunson (inside FBE) and Brownless (not in OSM) — 18 buildings final
+  - [x] S7.extra — Fixed combined name+% label (was hiding names on buildings without data)
 
 **Test criteria:**
 - Polygons are colour-coded: green (empty) through red (packed)
