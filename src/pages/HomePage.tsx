@@ -9,6 +9,7 @@ import { isOpenNow } from '@/lib/buildingHours'
 import OccupancyBar from '@/components/OccupancyBar'
 import { getOccupancyLabel, getOccupancyLevel, OCCUPANCY_COLOURS } from '@/constants/occupancy'
 import type { BlendedOccupancy, Building } from '@/types'
+import { BUILDING_META } from '@/constants/buildingMeta'
 
 function getGreeting(): string {
   const h = new Date().getHours()
@@ -174,47 +175,50 @@ function BuildingRow({ building, occ, walkMin, onClick }: { building: Building; 
   const pct = occ?.pct ?? null
   const colour = OCCUPANCY_COLOURS[getOccupancyLevel(pct)]
   const status = isOpenNow(building)
+  const meta = BUILDING_META[building.slug]
   const amenities = [
-    building.has_wifi ? 'WiFi' : null,
-    building.has_power ? 'Power' : null,
-    building.has_quiet_zone ? 'Quiet' : null,
-    building.has_group_seating ? 'Group' : null,
+    building.has_wifi ? 'WiFi' : null, building.has_power ? 'Power' : null,
+    building.has_quiet_zone ? 'Quiet' : null, building.has_group_seating ? 'Group' : null,
   ].filter((a): a is string => a !== null)
 
   return (
-    <button onClick={onClick} style={{ display: 'flex', flexDirection: 'column', width: '100%', padding: 18, textAlign: 'left', borderRadius: 16, backgroundColor: '#FAFBFD', border: '1px solid #EDF0F4', borderLeft: `4px solid ${colour}`, cursor: 'pointer', transition: 'background-color 150ms' }}>
-      {/* Top row: name + percentage */}
+    <button onClick={onClick} style={{ display: 'flex', flexDirection: 'column', width: '100%', padding: 18, textAlign: 'left', borderRadius: 16, backgroundColor: '#FAFBFD', border: '1px solid #EDF0F4', borderLeft: `4px solid ${colour}`, cursor: 'pointer' }}>
+      {/* Header: name + percentage */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', width: '100%' }}>
-        <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ flex: 1, minWidth: 0, paddingRight: 12 }}>
           <p style={{ fontSize: 16, fontWeight: 600, color: '#1E293B' }}>{building.name}</p>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 4 }}>
-            <span style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: status.open ? '#4CAF7D' : '#E05252' }} />
-            <span style={{ fontSize: 13, color: '#64748B' }}>
-              {status.open ? `Open · Closes ${status.closesAt}` : 'After hours · Keycard access'}
-              {walkMin !== null ? ` · ~${Math.round(walkMin)} min walk` : ''}
-            </span>
-          </div>
+          {meta && <p style={{ fontSize: 13, color: '#64748B', marginTop: 3, lineHeight: 1.4 }}>{meta.description}</p>}
         </div>
-        <span style={{ fontSize: 22, fontWeight: 700, color: colour }}>{pct !== null ? `${Math.round(pct)}%` : '—'}</span>
+        <span style={{ fontSize: 22, fontWeight: 700, color: colour, flexShrink: 0 }}>{pct !== null ? `${Math.round(pct)}%` : '—'}</span>
       </div>
 
       {/* Occupancy bar */}
       <div style={{ marginTop: 12, width: '100%' }}><OccupancyBar pct={pct} height={6} /></div>
-      <p style={{ fontSize: 12, color: '#94A3B8', marginTop: 4 }}>{getOccupancyLabel(pct)}</p>
 
-      {/* Bottom row: amenities + directions */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 12 }}>
-        <div style={{ display: 'flex', gap: 6 }}>
-          {amenities.slice(0, 3).map((a) => (
+      {/* Status row */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 8 }}>
+        <span style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: status.open ? '#4CAF7D' : '#E05252' }} />
+        <span style={{ fontSize: 13, color: '#64748B' }}>
+          {status.open ? `Open · Closes ${status.closesAt}` : 'After hours · Keycard access'}
+          {walkMin !== null ? ` · ~${Math.round(walkMin)} min walk` : ''}
+        </span>
+      </div>
+
+      {/* Nearby food */}
+      {meta?.nearbyFood?.[0] && (
+        <p style={{ fontSize: 12, color: '#94A3B8', marginTop: 6 }}>Nearby: {meta.nearbyFood[0]}</p>
+      )}
+
+      {/* Amenities + directions */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 10 }}>
+        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+          {amenities.map((a) => (
             <span key={a} style={{ fontSize: 11, padding: '2px 8px', borderRadius: 6, backgroundColor: '#EDF0F4', color: '#64748B' }}>{a}</span>
           ))}
         </div>
-        <a
-          href={`https://www.google.com/maps/dir/?api=1&destination=${building.entrance_lat},${building.entrance_lng}`}
-          target="_blank" rel="noopener noreferrer"
-          onClick={(e) => e.stopPropagation()}
-          style={{ fontSize: 12, fontWeight: 600, color: '#003865', textDecoration: 'none' }}
-        >
+        <a href={`https://www.google.com/maps/dir/?api=1&destination=${building.entrance_lat},${building.entrance_lng}`}
+          target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}
+          style={{ fontSize: 12, fontWeight: 600, color: '#003865', textDecoration: 'none', flexShrink: 0 }}>
           Directions →
         </a>
       </div>

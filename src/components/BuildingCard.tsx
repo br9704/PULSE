@@ -4,6 +4,7 @@ import type { PanInfo } from 'framer-motion'
 import type { BlendedOccupancy, Building } from '@/types'
 import FloorBreakdown from './FloorBreakdown'
 import { isOpenNow } from '@/lib/buildingHours'
+import { BUILDING_META } from '@/constants/buildingMeta'
 import OccupancyBar from './OccupancyBar'
 import OccupancyBadge from './OccupancyBadge'
 import TrendArrow from './TrendArrow'
@@ -27,6 +28,7 @@ export default function BuildingCard({ building, occupancy, onDismiss }: Buildin
 
   const status = isOpenNow(building)
   const amenities = getActiveAmenities(building)
+  const meta = BUILDING_META[building.slug]
   const pct = occupancy?.pct ?? null
   const trend = occupancy?.trend ?? 'stable'
   const floors = occupancy?.floor_occupancies ?? []
@@ -87,7 +89,11 @@ export default function BuildingCard({ building, occupancy, onDismiss }: Buildin
         <div style={{ padding: '0 20px 20px' }}>
           {/* Collapsed content */}
           <h2 style={{ fontSize: 20, fontWeight: 700, color: '#1E293B' }}>{building.name}</h2>
-          <p style={{ fontSize: 13, color: '#64748B', marginTop: 2 }}>University of Melbourne · Parkville</p>
+          {meta ? (
+            <p style={{ fontSize: 13, color: '#64748B', marginTop: 4, lineHeight: 1.5 }}>{meta.description}</p>
+          ) : (
+            <p style={{ fontSize: 13, color: '#64748B', marginTop: 2 }}>University of Melbourne · Parkville</p>
+          )}
 
           <div style={{ marginTop: 14 }}><OccupancyBar pct={pct} height={8} /></div>
 
@@ -129,6 +135,26 @@ export default function BuildingCard({ building, occupancy, onDismiss }: Buildin
                   {amenities.map((a) => <AmenityChip key={a.label} icon={a.icon} label={a.label} />)}
                 </div>
               </div>)}
+
+              {/* Tips */}
+              {meta?.tips && meta.tips.length > 0 && (
+                <div style={{ marginBottom: 16 }}>
+                  <h3 style={{ fontSize: 12, fontWeight: 700, color: '#94A3B8', letterSpacing: '0.5px', marginBottom: 8 }}>TIPS</h3>
+                  {meta.tips.map((tip, i) => (
+                    <p key={i} style={{ fontSize: 13, color: '#64748B', lineHeight: 1.5, marginBottom: 4 }}>• {tip}</p>
+                  ))}
+                </div>
+              )}
+
+              {/* Nearby Food */}
+              {meta?.nearbyFood && meta.nearbyFood.length > 0 && (
+                <div style={{ marginBottom: 16 }}>
+                  <h3 style={{ fontSize: 12, fontWeight: 700, color: '#94A3B8', letterSpacing: '0.5px', marginBottom: 8 }}>NEARBY FOOD</h3>
+                  {meta.nearbyFood.map((food, i) => (
+                    <p key={i} style={{ fontSize: 13, color: '#64748B', lineHeight: 1.5, marginBottom: 4 }}>• {food}</p>
+                  ))}
+                </div>
+              )}
 
               {/* Quick Links */}
               <div style={{ marginTop: 16 }}>
