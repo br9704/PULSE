@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useBuildings } from '@/hooks/useBuildings'
 import { useZones } from '@/hooks/useZones'
@@ -61,9 +61,9 @@ export default function HomePage() {
       {/* ── Quiet Right Now ── */}
       {quiet.length > 0 && (
         <SectionCard title="QUIET RIGHT NOW" style={{ margin: '20px 20px 0' }}>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14 }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, justifyContent: 'center' }}>
             {quiet.slice(0, 8).map((x) => (
-              <CompactCard key={x.building.id} building={x.building} occ={x.occ} walkMin={x.walk?.minutes ?? null} onClick={() => navigate('/map')} />
+              <CompactCard key={x.building.id} building={x.building} occ={x.occ} walkMin={x.walk?.minutes ?? null} onClick={() => navigate(`/map?building=${x.building.id}`)} />
             ))}
           </div>
         </SectionCard>
@@ -72,22 +72,16 @@ export default function HomePage() {
       {/* ── Filling Up ── */}
       {filling.length > 0 && (
         <SectionCard title="FILLING UP" style={{ margin: '16px 20px 0' }}>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14 }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, justifyContent: 'center' }}>
             {filling.slice(0, 8).map((x) => (
-              <CompactCard key={x.building.id} building={x.building} occ={x.occ} walkMin={x.walk?.minutes ?? null} onClick={() => navigate('/map')} />
+              <CompactCard key={x.building.id} building={x.building} occ={x.occ} walkMin={x.walk?.minutes ?? null} onClick={() => navigate(`/map?building=${x.building.id}`)} />
             ))}
           </div>
         </SectionCard>
       )}
 
       {/* ── All Buildings ── */}
-      <SectionCard title="ALL BUILDINGS" style={{ margin: '16px 20px 24px' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          {sorted.map((x) => (
-            <BuildingRow key={x.building.id} building={x.building} occ={x.occ} walkMin={x.walk?.minutes ?? null} onClick={() => navigate('/map')} />
-          ))}
-        </div>
-      </SectionCard>
+      <AllBuildingsSection sorted={sorted} navigate={navigate} />
     </div>
   )
 }
@@ -120,6 +114,59 @@ function CompactCard({ building, occ, walkMin, onClick }: { building: Building; 
         {walkMin !== null && <span style={{ fontSize: 12, color: '#94A3B8' }}>~{Math.round(walkMin)}m</span>}
       </div>
     </button>
+  )
+}
+
+type SortedItem = { building: Building; occ: BlendedOccupancy | null; walk: { minutes: number; meters: number } | null }
+
+function AllBuildingsSection({ sorted, navigate }: { sorted: SortedItem[]; navigate: (path: string) => void }) {
+  const [search, setSearch] = useState('')
+  const [sortBy, setSortBy] = useState<'occupancy' | 'name' | 'distance'>('occupancy')
+
+  const filtered = useMemo(() => {
+    let list = sorted
+    if (search) {
+      const q = search.toLowerCase()
+      list = list.filter((x) => x.building.name.toLowerCase().includes(q) || (x.building.short_name?.toLowerCase().includes(q) ?? false))
+    }
+    if (sortBy === 'name') list = [...list].sort((a, b) => a.building.name.localeCompare(b.building.name))
+    else if (sortBy === 'distance') list = [...list].sort((a, b) => (a.walk?.minutes ?? 999) - (b.walk?.minutes ?? 999))
+    return list
+  }, [sorted, search, sortBy])
+
+  return (
+    <div style={{ margin: '16px 20px 24px', padding: 24, backgroundColor: '#FFFFFF', borderRadius: 20, boxShadow: '0 4px 20px rgba(0,56,101,0.06)', border: '1px solid rgba(0,56,101,0.06)' }}>
+      <h2 style={{ fontSize: 12, fontWeight: 700, color: '#94A3B8', letterSpacing: '1px', marginBottom: 14 }}>ALL BUILDINGS</h2>
+
+      {/* Search */}
+      <div style={{ position: 'relative', marginBottom: 12 }}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" strokeWidth="2" style={{ position: 'absolute', left: 12, top: 11 }}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input
+          type="text"
+          placeholder="Search buildings..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          style={{ width: '100%', padding: '10px 12px 10px 36px', borderRadius: 12, border: '1px solid #EDF0F4', fontSize: 14, color: '#1E293B', backgroundColor: '#FAFBFD', outline: 'none' }}
+        />
+      </div>
+
+      {/* Sort buttons */}
+      <div style={{ display: 'flex', gap: 8, marginBottom: 14 }}>
+        {(['occupancy', 'name', 'distance'] as const).map((s) => (
+          <button key={s} onClick={() => setSortBy(s)} style={{ fontSize: 12, fontWeight: sortBy === s ? 600 : 400, padding: '5px 12px', borderRadius: 8, backgroundColor: sortBy === s ? '#003865' : '#F0F2F5', color: sortBy === s ? '#FFFFFF' : '#64748B', border: 'none', cursor: 'pointer', textTransform: 'capitalize' }}>
+            {s}
+          </button>
+        ))}
+      </div>
+
+      {/* List */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        {filtered.map((x) => (
+          <BuildingRow key={x.building.id} building={x.building} occ={x.occ} walkMin={x.walk?.minutes ?? null} onClick={() => navigate(`/map?building=${x.building.id}`)} />
+        ))}
+        {filtered.length === 0 && <p style={{ fontSize: 14, color: '#94A3B8', textAlign: 'center', padding: 20 }}>No buildings match your search</p>}
+      </div>
+    </div>
   )
 }
 

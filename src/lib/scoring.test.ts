@@ -70,7 +70,7 @@ describe('rankBuildings', () => {
       ['busy', makeOcc(80)],
       ['quiet', makeOcc(20)],
     ])
-    const result = rankBuildings(buildings, occ, DEFAULT_FILTERS, null)
+    const result = rankBuildings(buildings, occ, { ...DEFAULT_FILTERS, currently_open: false }, null)
     expect(result[0].building.id).toBe('quiet')
   })
 
@@ -101,7 +101,7 @@ describe('rankBuildings', () => {
       ['filling', makeOcc(50, 'filling')],
       ['emptying', makeOcc(50, 'emptying')],
     ])
-    const result = rankBuildings(buildings, occ, DEFAULT_FILTERS, null)
+    const result = rankBuildings(buildings, occ, { ...DEFAULT_FILTERS, currently_open: false }, null)
     expect(result[0].building.id).toBe('emptying')
   })
 

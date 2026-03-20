@@ -1,4 +1,5 @@
-import { lazy, Suspense, useCallback, useMemo, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import Map from '@/components/Map'
 import DataSourcePill from '@/components/DataSourcePill'
@@ -19,7 +20,17 @@ export default function MapPage() {
   const { zones } = useZones()
   const { position, isWatching } = useGeolocation()
   const { occupancyMap } = useBlendedOccupancy(buildings, zones)
+  const [searchParams, setSearchParams] = useSearchParams()
   const [selectedBuildingId, setSelectedBuildingId] = useState<string | null>(null)
+
+  // Auto-select building from URL query param
+  useEffect(() => {
+    const bid = searchParams.get('building')
+    if (bid && buildings.length > 0) {
+      setSelectedBuildingId(bid)
+      setSearchParams({}, { replace: true })
+    }
+  }, [searchParams, buildings, setSearchParams])
 
   const { building: selectedBuilding, occupancy: selectedOccupancy } = useBuildingCard(
     selectedBuildingId, buildings, occupancyMap,
