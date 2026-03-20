@@ -3,7 +3,7 @@
 > Status key: [ ] Not started | [x] Complete | [~] In progress | [⏭️] Deferred
 
 ## Project Status
-**Current state:** Sprints 0–6 complete. Full data pipeline + client-side blending: Realtime zone_occupancy subscription → blendOccupancy() per building → Map<buildingId, BlendedOccupancy>. Google typical + predictions fallback wired. 69 unit tests passing. Ready for Sprint 7.
+**Current state:** Sprints 0–7 complete. 20 UoM buildings with OSM-sourced polygons. Live heatmap rendering with data-driven fill colours, DataSourcePill, StaleDataBanner. Map layers extracted to mapLayers.ts. 69 unit tests passing. Ready for Sprint 8.
 
 ---
 
@@ -299,13 +299,16 @@
 - Stale data banner when data > 60 seconds old
 
 **Subtasks:**
-- [ ] S7.1 — Create Mapbox data-driven fill-color expression from occupancy colour scale
-- [ ] S7.2 — Update polygon fill colours when blended occupancy changes
-- [ ] S7.3 — Implement 800ms colour transition (Mapbox paint property transition)
-- [ ] S7.4 — Add occupancy % labels on polygon centroids (symbol layer, zoom gated)
-- [ ] S7.5 — Create src/components/DataSourcePill.tsx (bottom-left indicator)
-- [ ] S7.6 — Create src/components/StaleDataBanner.tsx (amber warning when data > 60s)
-- [ ] S7.7 — Update labels in real-time as occupancy changes
+- [x] S7.1 — Data-driven fill-color expression using interpolate + occupancy colour scale ✅
+- [x] S7.2 — Polygon colours update via source.setData() when occupancyMap changes ✅
+- [x] S7.3 — 800ms fill-color-transition configured ✅
+- [x] S7.4 — Occupancy % label layer at zoom >= 15.5 ✅
+- [x] S7.5 — DataSourcePill component (bottom-left, shows dominant data source) ✅
+- [x] S7.6 — StaleDataBanner component (amber warning, 60s threshold, hides for old seed data) ✅
+- [x] S7.7 — Labels update in real-time via GeoJSON source refresh ✅
+  - [x] S7.extra — Expanded from 5 to 20 UoM buildings (OSM-sourced polygons)
+  - [x] S7.extra — Fixed all polygon positions using OpenStreetMap Overpass API data
+  - [ ] S7.extra — Seed google_popular_times for remaining 13 new buildings (7/20 seeded)
 
 **Test criteria:**
 - Polygons are colour-coded: green (empty) through red (packed)

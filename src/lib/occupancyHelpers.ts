@@ -1,4 +1,6 @@
 import type {
+  BlendedOccupancy,
+  DataQuality,
   GooglePopularTime,
   OccupancyPrediction,
   ZoneOccupancy,
@@ -64,4 +66,42 @@ export function getCurrentPrediction(
   return rows.find(
     (r) => r.building_id === buildingId && r.day_of_week === dow && r.hour_of_day === hour,
   ) ?? null
+}
+
+/** Get the dominant data source across all buildings. 'live' wins any tie. */
+export function getDominantDataSource(
+  occupancyMap: Map<string, BlendedOccupancy>,
+): DataQuality {
+  if (occupancyMap.size === 0) return 'none'
+
+  const counts: Record<string, number> = {}
+  for (const occ of occupancyMap.values()) {
+    counts[occ.source] = (counts[occ.source] ?? 0) + 1
+  }
+
+  if (counts['live']) return 'live'
+
+  let best: DataQuality = 'none'
+  let bestCount = 0
+  for (const [source, count] of Object.entries(counts)) {
+    if (count > bestCount) {
+      best = source as DataQuality
+      bestCount = count
+    }
+  }
+  return best
+}
+
+/** Get the most recent last_updated timestamp across all buildings. */
+export function getLatestUpdate(
+  occupancyMap: Map<string, BlendedOccupancy>,
+): Date | null {
+  if (occupancyMap.size === 0) return null
+
+  let latest = 0
+  for (const occ of occupancyMap.values()) {
+    const t = new Date(occ.last_updated).getTime()
+    if (t > latest) latest = t
+  }
+  return latest > 0 ? new Date(latest) : null
 }

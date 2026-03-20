@@ -242,7 +242,7 @@ All tables have **Row Level Security** enabled. Anonymous users can read; only t
 - [x] **Sprint 4:** Realtime geolocation broadcasting
 - [x] **Sprint 5:** Zone aggregation Edge Function
 - [x] **Sprint 6:** Occupancy blending (live + Google + predicted)
-- [ ] **Sprint 7:** Live heatmap rendering
+- [x] **Sprint 7:** Live heatmap rendering + building expansion (5 → 20 buildings)
 - [ ] **Sprint 8:** Building cards (bottom sheet)
 - [ ] **Sprint 9:** Floor-level breakdown
 - [ ] **Sprint 10:** Smart recommendations ("Find me a spot")

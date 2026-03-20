@@ -72,6 +72,7 @@ describe('buildingsToFeatureCollection', () => {
       name: 'Baillieu Library',
       shortName: 'Baillieu',
       slug: 'baillieu-library',
+      occupancy_pct: null,
     })
   })
 
