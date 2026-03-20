@@ -51,7 +51,7 @@ export function usePositionBroadcast({ zoneId, campusSlug, enabled }: UsePositio
         })
       } catch (err) {
         // Non-fatal — log and continue. Next interval will retry.
-        console.error('[Pulse] Broadcast failed:', err)
+        console.error('[UniSpace] Broadcast failed:', err)
       }
     }
 

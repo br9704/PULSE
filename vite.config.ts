@@ -8,8 +8,8 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
-        name: 'Pulse',
-        short_name: 'Pulse',
+        name: 'UniSpace',
+        short_name: 'UniSpace',
         description: 'Campus occupancy, live.',
         start_url: '/',
         display: 'standalone',

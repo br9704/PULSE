@@ -1,11 +1,11 @@
 import { useState } from 'react'
 
 const FAQ = [
-  { q: 'How does Pulse know how busy a building is?', a: 'Pulse combines crowdsourced location data from active users with Google Maps popularity data. When enough students use Pulse, we show live occupancy. Otherwise, we use Google\'s typical busyness patterns.' },
-  { q: 'Is my location data private?', a: 'Yes. Your GPS coordinates never leave your device. Pulse only detects which building zone you\'re in using on-device processing, then sends just the zone ID — never your actual location.' },
+  { q: 'How does UniSpace know how busy a building is?', a: 'UniSpace combines crowdsourced location data from active users with Google Maps popularity data. When enough students use UniSpace, we show live occupancy. Otherwise, we use Google\'s typical busyness patterns.' },
+  { q: 'Is my location data private?', a: 'Yes. Your GPS coordinates never leave your device. UniSpace only detects which building zone you\'re in using on-device processing, then sends just the zone ID — never your actual location.' },
   { q: 'How accurate is the occupancy data?', a: 'Accuracy depends on the data source. Live crowdsourced data is the most accurate. Google estimates are directional (~15-20% margin). All data shows a source label.' },
   { q: 'What does "Google estimate" mean?', a: 'When we don\'t have enough live users, we show Google Maps\' typical popularity data — weekly patterns of how busy each building usually is at this time.' },
-  { q: 'Can I use Pulse without sharing my location?', a: 'Absolutely. You can browse occupancy data, view the map, and get recommendations without GPS. Walking time estimates just won\'t be available.' },
+  { q: 'Can I use UniSpace without sharing my location?', a: 'Absolutely. You can browse occupancy data, view the map, and get recommendations without GPS. Walking time estimates just won\'t be available.' },
 ]
 
 export default function AlertsPage() {
@@ -14,7 +14,7 @@ export default function AlertsPage() {
       {/* Header */}
       <div style={{ background: 'linear-gradient(145deg, #001F3F 0%, #003865 50%, #005A8C 100%)', padding: '56px 24px 32px' }}>
         <h1 style={{ fontSize: 28, fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.5px' }}>More</h1>
-        <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', marginTop: 6 }}>FAQ, alerts, and about Pulse</p>
+        <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', marginTop: 6 }}>FAQ, alerts, and about</p>
       </div>
 
       {/* Alerts preview */}
@@ -38,9 +38,9 @@ export default function AlertsPage() {
 
       {/* About */}
       <div style={{ margin: '20px 20px 32px', padding: 24, backgroundColor: '#FFFFFF', borderRadius: 20, boxShadow: '0 4px 20px rgba(0,56,101,0.06)', border: '1px solid rgba(0,56,101,0.06)' }}>
-        <h2 style={{ fontSize: 17, fontWeight: 700, color: '#1E293B' }}>About Pulse</h2>
+        <h2 style={{ fontSize: 17, fontWeight: 700, color: '#1E293B' }}>About UniSpace</h2>
         <p style={{ fontSize: 14, color: '#64748B', marginTop: 8, lineHeight: 1.6 }}>
-          Pulse gives university students real-time visibility into campus occupancy so they never waste time walking to a full building again.
+          UniSpace gives university students real-time visibility into campus occupancy so they never waste time walking to a full building again.
         </p>
         <p style={{ fontSize: 13, color: '#94A3B8', marginTop: 12 }}>
           Version 0.1.0 · Built by Bruno Jaamaa

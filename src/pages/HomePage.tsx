@@ -43,7 +43,7 @@ export default function HomePage() {
       {/* ── Header ── */}
       <div style={{ background: 'linear-gradient(145deg, #001F3F 0%, #003865 50%, #005A8C 100%)', padding: '56px 24px 40px' }}>
         <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.55)', fontWeight: 400, marginBottom: 2 }}>{getGreeting()}</p>
-        <h1 style={{ fontSize: 36, fontWeight: 800, color: '#FFFFFF', letterSpacing: '-1px', lineHeight: 1.1 }}>PULSE</h1>
+        <h1 style={{ fontSize: 36, fontWeight: 800, color: '#FFFFFF', letterSpacing: '-1px', lineHeight: 1.1 }}>UniSpace</h1>
         <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)', marginTop: 8 }}>University of Melbourne · Parkville</p>
       </div>
 
