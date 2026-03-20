@@ -39,7 +39,6 @@ export default function HomePage() {
 
   return (
     <div className="h-full overflow-y-auto" style={{ backgroundColor: '#F0F2F5' }}>
-    <div style={{ maxWidth: 480, margin: '0 auto' }}>
 
       {/* ── Header ── */}
       <div style={{ background: 'linear-gradient(145deg, #001F3F 0%, #003865 50%, #005A8C 100%)', padding: '56px 24px 40px' }}>
@@ -49,7 +48,7 @@ export default function HomePage() {
       </div>
 
       {/* ── Campus Status ── */}
-      <div style={{ margin: '-20px 20px 0', padding: 24, backgroundColor: '#FFFFFF', borderRadius: 20, boxShadow: '0 8px 32px rgba(0,56,101,0.08), 0 2px 8px rgba(0,0,0,0.03)', border: '1px solid rgba(0,56,101,0.06)' }}>
+      <div style={{ margin: '-20px 24px 0', padding: 24, backgroundColor: '#FFFFFF', borderRadius: 20, boxShadow: '0 8px 32px rgba(0,56,101,0.08), 0 2px 8px rgba(0,0,0,0.03)', border: '1px solid rgba(0,56,101,0.06)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <div style={{ width: 14, height: 14, borderRadius: 7, backgroundColor: campusColor, boxShadow: `0 0 10px ${campusColor}50` }} />
           <span style={{ fontSize: 20, fontWeight: 700, color: '#1E293B' }}>Campus is {campusLabel}</span>
@@ -61,7 +60,7 @@ export default function HomePage() {
 
       {/* ── Quiet Right Now ── */}
       {quiet.length > 0 && (
-        <SectionCard title="QUIET RIGHT NOW" style={{ margin: '20px 20px 0' }}>
+        <SectionCard title="QUIET RIGHT NOW" style={{ margin: '20px 24px 0' }}>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, justifyContent: 'center' }}>
             {quiet.slice(0, 8).map((x) => (
               <CompactCard key={x.building.id} building={x.building} occ={x.occ} walkMin={x.walk?.minutes ?? null} onClick={() => navigate(`/map?building=${x.building.id}`)} />
@@ -72,7 +71,7 @@ export default function HomePage() {
 
       {/* ── Filling Up ── */}
       {filling.length > 0 && (
-        <SectionCard title="FILLING UP" style={{ margin: '16px 20px 0' }}>
+        <SectionCard title="FILLING UP" style={{ margin: '16px 24px 0' }}>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, justifyContent: 'center' }}>
             {filling.slice(0, 8).map((x) => (
               <CompactCard key={x.building.id} building={x.building} occ={x.occ} walkMin={x.walk?.minutes ?? null} onClick={() => navigate(`/map?building=${x.building.id}`)} />
@@ -83,7 +82,6 @@ export default function HomePage() {
 
       {/* ── All Buildings ── */}
       <AllBuildingsSection sorted={sorted} navigate={navigate} />
-    </div>
     </div>
   )
 }
@@ -137,7 +135,7 @@ function AllBuildingsSection({ sorted, navigate }: { sorted: SortedItem[]; navig
   }, [sorted, search, sortBy])
 
   return (
-    <div style={{ margin: '16px 20px 24px', padding: 24, backgroundColor: '#FFFFFF', borderRadius: 20, boxShadow: '0 4px 20px rgba(0,56,101,0.06)', border: '1px solid rgba(0,56,101,0.06)' }}>
+    <div style={{ margin: '16px 24px 24px', padding: 24, backgroundColor: '#FFFFFF', borderRadius: 20, boxShadow: '0 4px 20px rgba(0,56,101,0.06)', border: '1px solid rgba(0,56,101,0.06)' }}>
       <h2 style={{ fontSize: 12, fontWeight: 700, color: '#94A3B8', letterSpacing: '1px', marginBottom: 14 }}>ALL BUILDINGS</h2>
 
       {/* Search */}
