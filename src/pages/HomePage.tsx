@@ -17,6 +17,7 @@ import { BUILDING_META } from '@/constants/buildingMeta'
 import { getCurrentTypical } from '@/lib/occupancyHelpers'
 import { formatHour } from '@/lib/predictionInsights'
 import { formatRelativeTime } from '@/lib/relativeTime'
+import { SkeletonCard, SkeletonBuildingRow, SkeletonGlanceCard } from '@/components/ui/SkeletonLoader'
 import { getLatestUpdate } from '@/lib/occupancyHelpers'
 
 type SortedItem = { building: Building; occ: BlendedOccupancy | null; walk: { minutes: number; meters: number } | null }
@@ -31,7 +32,7 @@ function getGreeting(): string {
 export default function HomePage() {
   const { buildings } = useBuildings()
   const { zones } = useZones()
-  const { occupancyMap, allTypicalRows } = useBlendedOccupancy(buildings, zones)
+  const { occupancyMap, allTypicalRows, isLoading } = useBlendedOccupancy(buildings, zones)
   const { position } = useGeolocation()
   const { favouriteIds, toggle: toggleFavourite, isFavourite } = useFavourites()
   const navigate = useNavigate()
@@ -70,10 +71,20 @@ export default function HomePage() {
       <motion.div className="flex flex-col md:grid md:grid-cols-[1fr_2fr] gap-5 mx-6 mt-5" style={{ y: parallaxY }} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }}>
 
         {/* Left / Top: Campus At a Glance */}
-        <CampusAtAGlance sorted={sorted} quietCount={quietCount} campusLabel={campusLabel} campusColor={campusColor} allTypicalRows={allTypicalRows} />
+        {isLoading || buildings.length === 0 ? (
+          <SkeletonGlanceCard />
+        ) : (
+          <CampusAtAGlance sorted={sorted} quietCount={quietCount} campusLabel={campusLabel} campusColor={campusColor} allTypicalRows={allTypicalRows} />
+        )}
 
         {/* Right / Bottom: Quiet Right Now */}
-        {quiet.length > 0 && (
+        {isLoading || buildings.length === 0 ? (
+          <SectionCard title="QUIET RIGHT NOW">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3">
+              {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}
+            </div>
+          </SectionCard>
+        ) : quiet.length > 0 ? (
           <SectionCard title="QUIET RIGHT NOW">
             <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3">
               {quiet.slice(0, 9).map((x) => (
@@ -83,7 +94,7 @@ export default function HomePage() {
               ))}
             </motion.div>
           </SectionCard>
-        )}
+        ) : null}
       </motion.div>
 
       {/* Your Favourites */}
@@ -118,7 +129,16 @@ export default function HomePage() {
 
       {/* All Buildings */}
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.35 }}>
-        <AllBuildingsSection sorted={sorted} navigate={navigate} isFavourite={isFavourite} toggleFavourite={toggleFavourite} allTypicalRows={allTypicalRows} />
+        {isLoading || buildings.length === 0 ? (
+          <div style={{ margin: '16px 24px 24px', padding: 24, backgroundColor: '#FFFFFF', borderRadius: 20, border: '2px solid rgba(0,56,101,0.65)' }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: '#94A3B8', letterSpacing: '1px', marginBottom: 14 }}>ALL BUILDINGS</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {Array.from({ length: 4 }).map((_, i) => <SkeletonBuildingRow key={i} />)}
+            </div>
+          </div>
+        ) : (
+          <AllBuildingsSection sorted={sorted} navigate={navigate} isFavourite={isFavourite} toggleFavourite={toggleFavourite} allTypicalRows={allTypicalRows} />
+        )}
       </motion.div>
     </div>
   )

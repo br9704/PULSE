@@ -45,4 +45,24 @@ export function SkeletonBuildingRow() {
   )
 }
 
+export function SkeletonGlanceCard() {
+  return (
+    <div className="p-6 rounded-[20px] bg-white border-2 border-[rgba(0,56,101,0.65)] flex flex-col gap-4">
+      <div className="flex items-center gap-2.5">
+        <Skeleton className="h-3 w-3 rounded-full" />
+        <Skeleton className="h-5 w-40" />
+      </div>
+      <Skeleton className="h-3.5 w-48" />
+      <Skeleton className="h-px w-full" />
+      <Skeleton className="h-3 w-20" />
+      {Array.from({ length: 4 }).map((_, i) => (
+        <div key={i} className="flex justify-between">
+          <Skeleton className="h-3.5 w-24" />
+          <Skeleton className="h-3.5 w-20" />
+        </div>
+      ))}
+    </div>
+  )
+}
+
 export default Skeleton
