@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { motion, useMotionValue, animate } from 'framer-motion'
 import type { PanInfo } from 'framer-motion'
 import type { BlendedOccupancy, Building, HourlyPrediction } from '@/types'
@@ -14,6 +15,8 @@ import PredictionSection from './PredictionSection'
 import PhotoCarousel from './PhotoCarousel'
 import TipsList from './TipsList'
 import { getActiveAmenities } from '@/lib/amenityHelpers'
+import { shareBuilding } from '@/lib/shareBuilding'
+import { formatRelativeTime } from '@/lib/relativeTime'
 
 interface BuildingCardProps {
   building: Building
@@ -35,6 +38,7 @@ export default function BuildingCard({
   reportCount = 0, noiseLevel, noiseCount, isFavourite, onToggleFavourite,
 }: BuildingCardProps) {
   const y = useMotionValue(0)
+  const [shareToast, setShareToast] = useState(false)
 
   function handleDragEnd(_: never, info: PanInfo) {
     if (info.offset.y > 100 || info.velocity.y > 400) {
@@ -89,9 +93,21 @@ export default function BuildingCard({
           backgroundColor: '#F0F2F5',
           borderTopLeftRadius: 20, borderTopRightRadius: 20,
         }}>
-          {onToggleFavourite ? (
-            <FavouriteButton isFavourite={isFavourite ?? false} onToggle={onToggleFavourite} />
-          ) : <div />}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+            {onToggleFavourite && (
+              <FavouriteButton isFavourite={isFavourite ?? false} onToggle={onToggleFavourite} />
+            )}
+            <button
+              onClick={async () => {
+                const ok = await shareBuilding(building.id, building.name)
+                if (ok) { setShareToast(true); setTimeout(() => setShareToast(false), 2000) }
+              }}
+              aria-label="Share building"
+              style={{ width: 40, height: 40, borderRadius: 20, border: 'none', backgroundColor: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+            </button>
+          </div>
           <div style={{ width: 36, height: 4, borderRadius: 2, backgroundColor: '#CBD5E1', cursor: 'grab' }} />
           <button
             onClick={onDismiss}
@@ -105,6 +121,13 @@ export default function BuildingCard({
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1E293B" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
         </div>
+
+        {/* Share toast */}
+        {shareToast && (
+          <div style={{ position: 'absolute', top: 60, left: '50%', transform: 'translateX(-50%)', padding: '8px 16px', borderRadius: 10, backgroundColor: '#003865', color: '#FFFFFF', fontSize: 13, fontWeight: 600, zIndex: 20 }}>
+            Link copied!
+          </div>
+        )}
 
         {/* Content */}
         <div style={{ padding: '0 20px 32px', display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -127,7 +150,10 @@ export default function BuildingCard({
           {/* Occupancy container */}
           <div style={{ padding: 16, borderRadius: 14, backgroundColor: '#FFFFFF', border: '2px solid rgba(0,56,101,0.18)', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
             <OccupancyBar pct={pct} height={8} />
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 10 }}>
+            {occupancy?.last_updated && (
+              <p style={{ fontSize: 11, color: '#94A3B8', marginTop: 6, marginBottom: 0 }}>Updated {formatRelativeTime(occupancy.last_updated)}</p>
+            )}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 6 }}>
               <OccupancyBadge pct={pct} />
               <TrendArrow trend={trend} />
             </div>

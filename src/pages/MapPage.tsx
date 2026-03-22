@@ -119,7 +119,7 @@ export default function MapPage() {
       <StaleDataBanner lastUpdated={latestUpdate} />
       <Map buildings={buildings} occupancyMap={occupancyMap} onBuildingClick={handleBuildingClick} />
       <div className="absolute bottom-2 left-4" style={{ zIndex: 50 }}>
-        <DataSourcePill source={dominantSource} />
+        <DataSourcePill source={dominantSource} lastUpdated={latestUpdate} />
       </div>
       <ReportFAB visible={!selectedBuilding && !showFind} onClick={handleFABClick} />
 

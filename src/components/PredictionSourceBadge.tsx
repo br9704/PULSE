@@ -8,10 +8,12 @@ interface PredictionSourceBadgeProps {
 export default function PredictionSourceBadge({ source, confidence }: PredictionSourceBadgeProps) {
   const isGoogle = source === 'google'
   const color = isGoogle ? '#0080A4' : '#C8A951'
-  const label = isGoogle ? 'Based on Google data' : 'Pulse prediction'
-  const confidenceLabel = confidence === 'high' ? 'High confidence'
-    : confidence === 'medium' ? 'Medium confidence'
-    : 'Estimated'
+  const label = isGoogle ? 'Based on Google historical patterns' : 'Pulse prediction'
+  const confidenceLabel = isGoogle
+    ? 'Estimated from weekly trends'
+    : confidence === 'high' ? 'High confidence (4+ weeks data)'
+    : confidence === 'medium' ? 'Medium confidence (2+ weeks data)'
+    : 'Low confidence (limited data)'
 
   return (
     <div

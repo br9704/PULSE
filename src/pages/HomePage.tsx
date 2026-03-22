@@ -16,6 +16,8 @@ import type { BlendedOccupancy, Building, GooglePopularTime } from '@/types'
 import { BUILDING_META } from '@/constants/buildingMeta'
 import { getCurrentTypical } from '@/lib/occupancyHelpers'
 import { formatHour } from '@/lib/predictionInsights'
+import { formatRelativeTime } from '@/lib/relativeTime'
+import { getLatestUpdate } from '@/lib/occupancyHelpers'
 
 type SortedItem = { building: Building; occ: BlendedOccupancy | null; walk: { minutes: number; meters: number } | null }
 
@@ -183,6 +185,14 @@ function CampusAtAGlance({ sorted, quietCount, campusLabel, campusColor, allTypi
         {quietest && <StatRow label="Quietest" value={`${quietest.building.short_name || quietest.building.name} (${Math.round(quietest.occ!.pct!)}%)`} color="#4CAF7D" />}
         {busiest && <StatRow label="Busiest" value={`${busiest.building.short_name || busiest.building.name} (${Math.round(busiest.occ!.pct!)}%)`} color="#E05252" />}
         {peakHour !== null && <StatRow label="Peak hour today" value={formatHour(peakHour)} />}
+        {withData.length > 0 && (() => {
+          const latest = withData.reduce((best, x) => {
+            const t = new Date(x.occ!.last_updated).getTime()
+            const b = new Date(best.occ!.last_updated).getTime()
+            return t > b ? x : best
+          })
+          return <StatRow label="Updated" value={formatRelativeTime(latest.occ!.last_updated)} />
+        })()}
       </div>
     </div>
   )

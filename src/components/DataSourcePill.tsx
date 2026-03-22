@@ -1,7 +1,10 @@
+import { useState, useEffect } from 'react'
 import type { DataQuality } from '@/types'
+import { formatRelativeTime } from '@/lib/relativeTime'
 
 interface DataSourcePillProps {
   source: DataQuality
+  lastUpdated?: Date | null
 }
 
 const CONFIG: Record<DataQuality, { label: string; color: string }> = {
@@ -13,8 +16,17 @@ const CONFIG: Record<DataQuality, { label: string; color: string }> = {
   none: { label: 'No data', color: 'var(--color-source-stale)' },
 }
 
-export default function DataSourcePill({ source }: DataSourcePillProps) {
+export default function DataSourcePill({ source, lastUpdated }: DataSourcePillProps) {
   const { label, color } = CONFIG[source]
+  const [timeLabel, setTimeLabel] = useState('')
+
+  useEffect(() => {
+    if (!lastUpdated) return
+    const update = () => setTimeLabel(formatRelativeTime(lastUpdated.toISOString()))
+    update()
+    const interval = setInterval(update, 10_000)
+    return () => clearInterval(interval)
+  }, [lastUpdated])
 
   return (
     <div
@@ -25,7 +37,7 @@ export default function DataSourcePill({ source }: DataSourcePillProps) {
         className="w-2 h-2 rounded-full inline-block"
         style={{ backgroundColor: color }}
       />
-      {label}
+      {label}{timeLabel && ` · ${timeLabel}`}
     </div>
   )
 }
