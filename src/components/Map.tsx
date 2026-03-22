@@ -19,13 +19,10 @@ export default function Map({ buildings, occupancyMap, onBuildingClick }: MapPro
   const containerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<mapboxgl.Map | null>(null)
   const onClickRef = useRef(onBuildingClick)
-  // eslint-disable-next-line react-compiler/react-compiler
   onClickRef.current = onBuildingClick
   const buildingsRef = useRef(buildings)
-  // eslint-disable-next-line react-compiler/react-compiler
   buildingsRef.current = buildings
   const occupancyRef = useRef(occupancyMap)
-  // eslint-disable-next-line react-compiler/react-compiler
   occupancyRef.current = occupancyMap
 
   // Initialise map (runs once)
