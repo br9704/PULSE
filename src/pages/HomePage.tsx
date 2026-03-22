@@ -64,16 +64,16 @@ export default function HomePage() {
         <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', marginTop: 6 }}>Not affiliated with the University of Melbourne</p>
       </div>
 
-      {/* Campus At a Glance + Quiet Right Now — side by side */}
-      <motion.div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 20, margin: '20px 24px 0', y: parallaxY }} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }}>
+      {/* Campus At a Glance + Quiet Right Now — stacked on mobile, side-by-side on tablet+ */}
+      <motion.div className="flex flex-col md:grid md:grid-cols-[1fr_2fr] gap-5 mx-6 mt-5" style={{ y: parallaxY }} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }}>
 
-        {/* Left: Campus At a Glance */}
+        {/* Left / Top: Campus At a Glance */}
         <CampusAtAGlance sorted={sorted} quietCount={quietCount} campusLabel={campusLabel} campusColor={campusColor} allTypicalRows={allTypicalRows} />
 
-        {/* Right: Quiet Right Now */}
+        {/* Right / Bottom: Quiet Right Now */}
         {quiet.length > 0 && (
           <SectionCard title="QUIET RIGHT NOW">
-            <motion.div variants={staggerContainer} initial="hidden" animate="visible" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+            <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3">
               {quiet.slice(0, 9).map((x) => (
                 <motion.div key={x.building.id} variants={fadeInUp}>
                   <CompactCard building={x.building} occ={x.occ} walkMin={x.walk?.minutes ?? null} onClick={() => navigate(`/map?building=${x.building.id}`)} isFav={isFavourite(x.building.id)} onToggleFav={() => toggleFavourite(x.building.id)} />
@@ -88,7 +88,7 @@ export default function HomePage() {
       {favourites.length > 0 && (
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.2 }} style={{ margin: '20px 24px 0' }}>
           <SectionCard title="YOUR FAVOURITES">
-            <motion.div variants={staggerContainer} initial="hidden" animate="visible" style={{ display: 'flex', flexWrap: 'wrap', gap: 14, justifyContent: 'center' }}>
+            <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
               {favourites.slice(0, 8).map((x) => (
                 <motion.div key={x.building.id} variants={fadeInUp}>
                   <CompactCard building={x.building} occ={x.occ} walkMin={x.walk?.minutes ?? null} onClick={() => navigate(`/map?building=${x.building.id}`)} isFav={isFavourite(x.building.id)} onToggleFav={() => toggleFavourite(x.building.id)} />
@@ -103,7 +103,7 @@ export default function HomePage() {
       {filling.length > 0 && (
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.3 }} style={{ margin: '16px 24px 0' }}>
           <SectionCard title="FILLING UP">
-            <motion.div variants={staggerContainer} initial="hidden" animate="visible" style={{ display: 'flex', flexWrap: 'wrap', gap: 14, justifyContent: 'center' }}>
+            <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
               {filling.slice(0, 8).map((x) => (
                 <motion.div key={x.building.id} variants={fadeInUp}>
                   <CompactCard building={x.building} occ={x.occ} walkMin={x.walk?.minutes ?? null} onClick={() => navigate(`/map?building=${x.building.id}`)} isFav={isFavourite(x.building.id)} onToggleFav={() => toggleFavourite(x.building.id)} />

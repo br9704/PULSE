@@ -13,7 +13,7 @@ import FavouriteButton from './FavouriteButton'
 import PredictionSection from './PredictionSection'
 import PhotoCarousel from './PhotoCarousel'
 import TipsList from './TipsList'
-import { getActiveAmenities } from './AmenityChip'
+import { getActiveAmenities } from '@/lib/amenityHelpers'
 
 interface BuildingCardProps {
   building: Building
