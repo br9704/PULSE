@@ -19,17 +19,22 @@ interface FindPanelProps {
   onBuildingSelect: (id: string) => void
 }
 
-const CHIPS: { key: keyof FilterState; label: string }[] = [
+type CustomFilter = 'under50' | 'under30'
+
+const AMENITY_CHIPS: { key: keyof FilterState; label: string }[] = [
   { key: 'currently_open', label: 'Open Now' },
-  { key: 'has_wifi', label: 'WiFi' },
-  { key: 'has_power', label: 'Power' },
-  { key: 'has_quiet_zone', label: 'Quiet' },
-  { key: 'has_group_seating', label: 'Group' },
-  { key: 'low_noise', label: 'Low Noise' },
+  { key: 'has_quiet_zone', label: 'Quiet Zone' },
+  { key: 'has_food_nearby', label: 'Food Nearby' },
+]
+
+const OCCUPANCY_CHIPS: { key: CustomFilter; label: string }[] = [
+  { key: 'under50', label: 'Under 50%' },
+  { key: 'under30', label: 'Under 30%' },
 ]
 
 export default function FindPanel({ visible, onDismiss, buildings, occupancyMap, userPosition, onBuildingSelect }: FindPanelProps) {
   const [filters, setFilters] = useState<FilterState>({ ...DEFAULT_FILTERS, currently_open: false })
+  const [customFilters, setCustomFilters] = useState<Record<CustomFilter, boolean>>({ under50: false, under30: false })
   const reportsMap = useRecentReports()
 
   const noiseMap = useMemo(() => {
@@ -41,12 +46,30 @@ export default function FindPanel({ visible, onDismiss, buildings, occupancyMap,
     return map
   }, [reportsMap])
 
-  const results = useRecommendations(buildings, occupancyMap, filters, userPosition, noiseMap)
+  // Apply occupancy cap from custom filters
+  const effectiveFilters = useMemo(() => {
+    const f = { ...filters }
+    if (customFilters.under30) f.max_occupancy_pct = 30
+    else if (customFilters.under50) f.max_occupancy_pct = 50
+    else f.max_occupancy_pct = 100
+    return f
+  }, [filters, customFilters])
+
+  const results = useRecommendations(buildings, occupancyMap, effectiveFilters, userPosition, noiseMap)
 
   const handleToggle = useCallback((key: keyof FilterState) => {
     setFilters((prev) => {
       const val = prev[key]
       if (typeof val === 'boolean') return { ...prev, [key]: !val }
+      return prev
+    })
+  }, [])
+
+  const handleCustomToggle = useCallback((key: CustomFilter) => {
+    setCustomFilters((prev) => {
+      // Mutually exclusive: under30 and under50
+      if (key === 'under30') return { under50: false, under30: !prev.under30 }
+      if (key === 'under50') return { under30: false, under50: !prev.under50 }
       return prev
     })
   }, [])
@@ -94,7 +117,7 @@ export default function FindPanel({ visible, onDismiss, buildings, occupancyMap,
 
             {/* Filter chips */}
             <div style={{ padding: '12px 20px', display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              {CHIPS.map(({ key, label }) => {
+              {AMENITY_CHIPS.map(({ key, label }) => {
                 const active = Boolean(filters[key])
                 return (
                   <button
@@ -105,6 +128,23 @@ export default function FindPanel({ visible, onDismiss, buildings, occupancyMap,
                       backgroundColor: active ? '#003865' : '#FFFFFF',
                       color: active ? '#FFFFFF' : '#64748B',
                       border: `1.5px solid ${active ? '#003865' : 'rgba(0,56,101,0.2)'}`,
+                    }}
+                  >
+                    {label}
+                  </button>
+                )
+              })}
+              {OCCUPANCY_CHIPS.map(({ key, label }) => {
+                const active = customFilters[key]
+                return (
+                  <button
+                    key={key}
+                    onClick={() => handleCustomToggle(key)}
+                    style={{
+                      padding: '6px 14px', borderRadius: 20, fontSize: 13, fontWeight: 500, cursor: 'pointer',
+                      backgroundColor: active ? '#4CAF7D' : '#FFFFFF',
+                      color: active ? '#FFFFFF' : '#64748B',
+                      border: `1.5px solid ${active ? '#4CAF7D' : 'rgba(0,56,101,0.2)'}`,
                     }}
                   >
                     {label}
@@ -135,7 +175,7 @@ export default function FindPanel({ visible, onDismiss, buildings, occupancyMap,
                 <div style={{ textAlign: 'center', padding: '32px 0' }}>
                   <p style={{ fontSize: 15, fontWeight: 600, color: '#1E293B' }}>No spots match</p>
                   <p style={{ fontSize: 13, color: '#94A3B8', marginTop: 4 }}>Try removing some filters</p>
-                  <button onClick={() => setFilters({ ...DEFAULT_FILTERS, currently_open: false })} style={{ marginTop: 12, padding: '8px 20px', borderRadius: 10, border: 'none', backgroundColor: '#003865', color: '#FFFFFF', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
+                  <button onClick={() => { setFilters({ ...DEFAULT_FILTERS, currently_open: false }); setCustomFilters({ under50: false, under30: false }) }} style={{ marginTop: 12, padding: '8px 20px', borderRadius: 10, border: 'none', backgroundColor: '#003865', color: '#FFFFFF', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
                     Reset Filters
                   </button>
                 </div>
